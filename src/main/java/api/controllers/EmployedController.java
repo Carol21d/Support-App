@@ -20,50 +20,60 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet(urlPatterns = "/api/employed")
 
-public class EmployedController extends HttpServlet { // Con este objeto tenemos acceso a muchos metodos para tratar las Api
-    
-    private InterfaceService employedService; // Usamos como atributo para poder acceder a el servicio desde TODA la clase
+public class EmployedController extends HttpServlet { // Con este objeto tenemos acceso a muchos metodos para tratar las
+                                                      // Api
+
+    private InterfaceService employedService; // Usamos como atributo para poder acceder a el servicio desde TODA la
+                                              // clase
 
     public EmployedController() {
         this.employedService = new EmployedService();
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException { // Esta clase nos devuelve la respuesta, la peticion y si no nos devueleve un error
-
-        resp.setContentType("application/json;charset=UTF-8"); // Tenemos que definir que tipo sera la respuesta que vamos a recibir.
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException { 
+        resp.setContentType("application/json;charset=UTF-8"); // Tenemos que definir que tipo sera la respuesta que
+                                                               // vamos a recibir.
         resp.addHeader("Access-Control-Allow-Origin", "*");
         PrintWriter out = resp.getWriter(); // El objeto que devolveremos en la salida.
 
-        // EmployedService employedService = new EmployedService();  // La responsabilidad de pedir al modelo los datos es del SERVICIO NO DEL CONTROLADOR
-        
-        // Tenemos que crear un tryCatch para controlar el status de la peticion y controlarla en caso de errores
+        // EmployedService employedService = new EmployedService(); // La
+        // responsabilidad de pedir al modelo los datos es del SERVICIO NO DEL
+        // CONTROLADOR
+
+        // Tenemos que crear un tryCatch para controlar el status de la peticion y
+        // controlarla en caso de errores
         try {
-            List<Object> employeds =  employedService.index(); // Pasamos a la vista la lista de nuestros empleados en payloads
+            List<Object> employeds = employedService.index(); // Pasamos a la vista la lista de nuestros empleados en
+                                                              // payloads
             out.println(View.show(employeds)); // Recibo los empleados y respondemos al cliente
-            resp.setStatus(HttpServletResponse.SC_OK); // La respuesta devolverá un status 200 siempre que salga todo bien
+            resp.setStatus(HttpServletResponse.SC_OK); // La respuesta devolverá un status 200 siempre que salga todo
+                                                       // bien
             out.close(); // Tenemos que cerrar la comunicacion cuando acabe la conexion
         } catch (Exception e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); // Si da error devolvemos un bad request por ejemplo
-            Message message = new Message(); // Creamos una clase message para poder tener una clase que se ocupe de los mensaje 
-            message.setMessage("Error en el traspaso de datos" + e.getMessage()); // Le seteamos el valor de error por que estamos en el catch
-            out.println(View.show(message)); // Imprimimos el message llamando a nuestra clase vista con el metodo show que creamos
+            Message message = new Message(); // Creamos una clase message para poder tener una clase que se ocupe de los
+                                             // mensaje
+            message.setMessage("Error en el traspaso de datos" + e.getMessage()); // Le seteamos el valor de error por
+                                                                                  // que estamos en el catch
+            out.println(View.show(message)); // Imprimimos el message llamando a nuestra clase vista con el metodo show
+                                             // que creamos
 
         }
 
-
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         resp.setContentType("application/json;charset=utf-8"); // Seteamos de que tipo sera la respuesta
         resp.addHeader("Access-Control-Allow-Origin", "*");
-        
+
         PrintWriter out = resp.getWriter(); // La salida
 
         try {
-            Object employed = employedService.store(req.getReader()); // El controlador llama al servicio para pasarle lo que le ha llegado del body
+            Object employed = employedService.store(req.getReader()); // El controlador llama al servicio para pasarle
+                                                                      // lo que le ha llegado del body
             out.println(View.show(employed));
             resp.setStatus(HttpServletResponse.SC_CREATED); // Comprobamos que la respuesta se creo correstamente
         } catch (Exception e) {
@@ -72,4 +82,22 @@ public class EmployedController extends HttpServlet { // Con este objeto tenemos
         }
     }
 
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        resp.setContentType("application/json;charset=utf-8");
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+
+        PrintWriter out = resp.getWriter();
+        try {
+            Object employed = employedService.store(req.getReader()); 
+            out.println(View.show(employed));
+            resp.setStatus(HttpServletResponse.SC_OK);
+
+        } catch (Exception e) {
+            resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            System.out.println("Error:" + e.getMessage());
+        }
+
+    }
 }
