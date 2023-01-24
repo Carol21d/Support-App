@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+import api.contracts.InterfaceEmployedRepository;
 import api.contracts.InterfaceService;
 // import api.models.Employed;
 import api.models.Message;
+import api.repositories.mysql.MysqlEmployedRepository;
 // import api.payloads.EmployedPayload;
 import api.services.EmployedService;
 import api.views.View;
@@ -27,7 +29,8 @@ public class EmployedController extends HttpServlet { // Con este objeto tenemos
                                               // clase
 
     public EmployedController() {
-        this.employedService = new EmployedService();
+        InterfaceEmployedRepository db = new MysqlEmployedRepository();
+        this.employedService = new EmployedService(db);
     }
 
     @Override
