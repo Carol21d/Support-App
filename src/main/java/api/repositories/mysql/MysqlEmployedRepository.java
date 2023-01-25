@@ -49,5 +49,9 @@ public class MysqlEmployedRepository implements InterfaceEmployedRepository {
 
         return rs;
     }
+    @Override
+    public ResultSet delete(EmployedPayload employed) throws SQLException{
+        
+    }
     
 }
