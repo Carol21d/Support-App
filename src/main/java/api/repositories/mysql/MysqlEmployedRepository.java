@@ -49,9 +49,19 @@ public class MysqlEmployedRepository implements InterfaceEmployedRepository {
 
         return rs;
     }
-    @Override
-    public ResultSet delete(EmployedPayload employed) throws SQLException{
-        
+    // @Override
+    public ResultSet delete(int id) throws SQLException{
+        String query = "delete from users where id = ?";
+        PreparedStatement preparedStmt = repository.conn.prepareStatement(query);
+        preparedStmt.setInt(1, id);
+        preparedStmt.executeUpdate(); // Actualizamos
+        preparedStmt.close(); // Cerramos conexion
+
+        Statement statement = repository.conn.createStatement(); // Rescuperamos el ultimo añadido para saber si se creo correctamente
+        String sql = String.format("Select * FROM %s ORDER BY id DESC LIMIT 1", table);
+        ResultSet rs = statement.executeQuery(sql);
+
+        return rs;
     }
     
 }

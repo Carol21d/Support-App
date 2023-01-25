@@ -93,7 +93,7 @@ public class EmployedController extends HttpServlet { // Con este objeto tenemos
 
         PrintWriter out = resp.getWriter();
         try {
-            Object employed = employedService.store(req.getReader()); 
+            Object employed = employedService.delete(req.getReader()); 
             out.println(View.show(employed));
             resp.setStatus(HttpServletResponse.SC_OK);
 
